@@ -2,7 +2,7 @@
 
 namespace Cacheable;
 
-use Cache;
+use \Cache;
 use Closure;
 use InvalidArgumentException;
 
@@ -34,7 +34,7 @@ trait CacheableTrait
             'class'    => $previous_call['class'],
             'function' => $previous_call['function'],
             'args'     => $previous_call['args'],
-            'commit'   => config('cache.config'),
+            'commit'   => config('cache.commit'),
         ];
         $key  = $this->generateCacheKey($data);
 

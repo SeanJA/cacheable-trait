@@ -23,8 +23,13 @@ class Controller
     use Cacheable;
 }
 ```
-
-2. #### Call it where you need:
+2. #### Add this line to  `config/cache.php` to be able to read the Environment variable after a deploy
+```
+    ...
+    'commit' => env('GIT_COMMIT', null),
+    ...
+```
+3. #### Call it where you need:
 ```
     public function cacheableMethod( $cacheable_parameters )
     {
@@ -36,7 +41,7 @@ class Controller
     }
 ```
 
-3. ##### (Optional) Configure TTL per-class in minutes
+4. #### (Optional) Configure TTL per-class in minutes
 ```
     protected function getTTL()
     {
@@ -44,7 +49,7 @@ class Controller
     }
 ```
 
-4. ##### (Optional) Implement your own per-class generation key algorithm.
+5. #### (Optional) Implement your own per-class generation key algorithm.
 ```
     protected function generateCacheKey($data)
     {
