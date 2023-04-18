@@ -1,5 +1,5 @@
 # laravel-cacheable
-Simple trait to easy cache per-method in Laravel.
+Simple trait to easy cache per-method.
 
 
 ##How to use it:
@@ -8,29 +8,26 @@ Simple trait to easy cache per-method in Laravel.
 
 Features:
 * Remember data from cache ( if exists returns or store )
-* User Laravel Default TTL time
-* Per-method cache level
-* Cache become unreachable after a deploy. Auto-purge.
+* Custom cache ttl
 
 ---
-##### Add the 'use' clause:
+##### Add use and pass in the psr6 cache item pool interface:
 
-```
-use App\Traits\Cacheable;
+```php
+
+use CacheableTrait\CacheableTrait;
 
 class Controller
 {
-    use Cacheable;
+    use CacheableTrait;
+    public function __construct(CacheItemPoolInterface $cache)
+    {
+      $this->setCache($cache);
+    }
 }
 ```
-##### Add this line to  `config/cache.php` to be able to read the Environment variable after a deploy
-```
-    ...
-    'commit' => env('GIT_COMMIT', null),
-    ...
-```
 ##### Call it where you need:
-```
+```php
     public function cacheableMethod( $cacheable_parameters )
     {
         $data = $this->remember(function(){
@@ -41,22 +38,42 @@ class Controller
     }
 ```
 
-##### (Optional) Configure TTL per-class in minutes
-```
-    protected function getTTL()
+##### (Optional) Configure TTL per-class
+```php
+    protected function getTTL(): DateInterval
     {
-        return 10;
+        return DateInterval::createFromDateString('1 day');
     }
 ```
 
-##### (Optional) Implement your own per-class generation key algorithm.
-```
-    protected function generateCacheKey($data)
+##### (Optional) Implement your own key algorithm per-class
+```php
+    protected function generateCacheKey($data): string
     {
         return 'key';
     }
 ```
 
+##### (Optional) Add an environment variable to the cache key per-class
+```php
+    protected function getCacheId($data): string
+    {
+        return $_ENV['RELEASE_VERSION'];
+    }
+```
 
+##### (Optional) Decide if something should be cached per-class
+```php
+    protected function shouldCache(string $class, string $function, array $args): bool
+    {
+        return $args[0] === 'plz cache';
+    }
+```
 
-
+##### Disable the cache
+```php
+    public function shouldDisableCaching(): void
+    {
+        $this->unsetCache();
+    }
+```

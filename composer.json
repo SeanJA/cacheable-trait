@@ -1,0 +1,22 @@
+{
+    "name": "seanja/cacheable-trait",
+    "description": "cacheable trait",
+    "autoload": {
+        "psr-4": {
+            "CacheableTrait\\": "src/",
+            "Tests\\CacheableTrait\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8",
+        "psr/cache": "^1.0|^3.0"
+    },
+    "require-dev": {
+        "symfony/cache": "*",
+        "phpunit/phpunit": "8.*|^10.0",
+        "mockery/mockery": "^1.5"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
