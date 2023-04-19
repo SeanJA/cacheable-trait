@@ -4,7 +4,7 @@ Simple configurable trait to add caching per-method.
 ##How to use it:
 
 ---
-##### Add use and pass in the psr6 cache item pool interface, hopefully using a 
+##### Add use and pass in the psr6 cache item pool interface
 
 ```php
 class Controller
@@ -31,7 +31,7 @@ By default, this value will be remembered for 1 hour
 ```
 
 ##### Configure TTL (per class)
-Add a protected method called `getTTL` to your class that returns a date interval
+Add a protected method called `getTTL` to your class that returns a custom date interval based on the input
 ```php
     protected function getTTL(string $method, array $args): DateInterval
     {
@@ -73,7 +73,8 @@ Can be used to avoid caching certain method calls
     }
 ```
 
-##### Disable the cache (remember will do nothing because the cache is null)
+##### Disable the cache (remember will now do nothing because the cache is null)
+This will disable caching for the class until you restore it
 ```php
     public function shouldDisableCaching(): void
     {
