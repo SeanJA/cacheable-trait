@@ -19,7 +19,13 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "docker:coverage": "docker compose -f docker-compose-test.yml up --exit-code-from phpunit",
-        "coverage": "phpunit --coverage-html=./coverage --coverage-text"
+        "coverage": "phpunit --coverage-html=./coverage --coverage-text",
+        "docker:coverage": "docker compose -f docker-compose-test.yml up --exit-code-from phpunit"
+
+    },
+    "scripts-descriptions": {
+        "test": "Run the tests",
+        "coverage": "Run a coverage report",
+        "docker:coverage": "Run a coverage report in the docker container"
     }
 }
