@@ -1,0 +1,36 @@
+{
+    "name": "seanja/cacheable-trait",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["caching", "cache", "PSR-6", "psr6"],
+    "description": "cacheable trait",
+    "autoload": {
+        "psr-4": {
+            "SeanJA\\Cache\\": "src/",
+            "Tests\\SeanJA\\Cache\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8",
+        "psr/cache": "^3.0"
+    },
+    "require-dev": {
+        "symfony/cache": "*",
+        "phpunit/phpunit": "8.*|^10.0",
+        "mockery/mockery": "^1.5"
+    },
+    "suggest": {
+        "symfony/cache": "psr-6 cache implementation"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --testdox",
+        "coverage": "phpunit --coverage-html=./coverage --coverage-text",
+        "docker:coverage": "docker compose -f docker-compose-test.yml up --exit-code-from phpunit"
+
+    },
+    "scripts-descriptions": {
+        "test": "Run the tests",
+        "coverage": "Run a coverage report",
+        "docker:coverage": "Run a coverage report in the docker container"
+    }
+}
