@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  phpunit:
+    container_name: tests
+    build:
+      dockerfile: ./docker/PhpUnit.Dockerfile
+      context: .
+    volumes:
+      - .:/var/www/html
+    command:
+      - composer
+      - coverage
+    restart: "no"

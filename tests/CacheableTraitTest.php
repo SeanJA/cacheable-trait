@@ -126,4 +126,30 @@ class CacheableTraitTest extends TestCase
 
         $this->assertNotEquals($first, $second);
     }
+
+    public function testNoClosuresPlease()
+    {
+        $cache = new ArrayAdapter();
+
+        $class = new class($cache) {
+            use CacheableTrait;
+
+            public function __construct(CacheItemPoolInterface $cache)
+            {
+                $this->setCache($cache);
+            }
+
+            function getValue()
+            {
+                return $this->remember(function () {
+                    return microtime(true);
+                });
+            }
+        };
+
+        $this->expectException(\InvalidArgumentException::class);
+        $class->getValue(function(){
+            return 'what';
+        });
+    }
 }
