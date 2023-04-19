@@ -7,12 +7,10 @@ Simple configurable trait to add caching per-method.
 ##### Add use and pass in the psr6 cache item pool interface, hopefully using a 
 
 ```php
-
-use SeanJA\CacheableTrait\CacheableTrait;
-
 class Controller
 {
-    use CacheableTrait;
+    use SeanJA\Cache\CacheableTrait;
+    
     public function __construct(CacheItemPoolInterface $cache)
     {
       $this->setCache($cache);
@@ -20,6 +18,7 @@ class Controller
 }
 ```
 ##### Using it in a method:
+By default, this value will be remembered for 1 hour
 ```php
     public function cacheableMethod( $cacheable_parameters )
     {
@@ -31,12 +30,12 @@ class Controller
     }
 ```
 
-##### Configure TTL
+##### Configure TTL (per class)
 Add a protected method called `getTTL` to your class that returns a date interval
 ```php
-    protected function getTTL(string $function, array $args): DateInterval
+    protected function getTTL(string $method, array $args): DateInterval
     {
-        return match ($function) {
+        return match ($method) {
             'method1' => DateInterval::createFromDateString('1 day'),
             'method2' => DateInterval::createFromDateString('10 seconds'),
             'method3' => DateInterval::createFromDateString('10 seconds'),
@@ -45,27 +44,32 @@ Add a protected method called `getTTL` to your class that returns a date interva
     }
 ```
 
-##### Implement your own key algorithm per-class
+##### Implement your own key (per class)
+You can change the way the key is generated, it should be unique for each place you use remember otherwise you will
+end up overwriting things in weird ways
 ```php
-    protected function generateCacheKey($data): string
+    protected function generateCacheKey(string $class, string $method, array $args): string
     {
         return 'key';
     }
 ```
 
-##### Add an environment variable to the cache key per-class
+##### Add a custom id to the cache (per class)
+Add a custom value to the cache, can be used to bust the cache when you do a deploy, or you could set it manually to
+bust the cache at any point.
 ```php
-    protected function getCacheId($data): string
+    protected function getCacheId(): string
     {
-        return $_ENV['RELEASE_VERSION']; // or something else, I dunno
+        return $_ENV['RELEASE_VERSION'];
     }
 ```
 
-##### Decide if something should be cached
+##### Decide if something should be cached (per class)
+Can be used to avoid caching certain method calls
 ```php
-    protected function shouldCache(string $function, array $args): bool
+    protected function shouldCache(string $method, array $args): bool
     {
-        return $args[0] === 'plz cache';
+        return $method === 'maybeCache', $args[0] === 'plz cache';
     }
 ```
 
@@ -73,6 +77,28 @@ Add a protected method called `getTTL` to your class that returns a date interva
 ```php
     public function shouldDisableCaching(): void
     {
-        $this->unsetCache();
+        $this->disableCache();
     }
+```
+
+##### Disable the cache temporarily
+If you really want to
+```php
+class CachedClass{
+    use \SeanJA\Cache\CacheableTrait;
+    
+    public function cachedTime(){
+        return $this->remember(function(){
+            return time();
+        });
+    }
+
+    public function uncachedTime(): void
+    {
+        $this->disableCache();
+        $data = $this->cachedTime();
+        $this->restoreCache();
+        return $data; 
+    }
+}
 ```

@@ -23,7 +23,7 @@
         "symfony/cache": "psr-6 cache implementation"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
+        "test": "vendor/bin/phpunit --testdox",
         "coverage": "phpunit --coverage-html=./coverage --coverage-text",
         "docker:coverage": "docker compose -f docker-compose-test.yml up --exit-code-from phpunit"
 

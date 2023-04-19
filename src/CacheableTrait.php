@@ -12,18 +12,18 @@ trait CacheableTrait
     /**
      * @var CacheItemPoolInterface|null
      */
-    private CacheItemPoolInterface|null $cache;
+    private CacheItemPoolInterface|null $cache = null;
 
     /**
      * @var CacheItemPoolInterface|null
      */
-    private CacheItemPoolInterface|null $previousCache;
+    private CacheItemPoolInterface|null $previousCache = null;
 
     /**
      * Hashing algorithm for the key.
      * @var string
      */
-    protected string $hash_algo = 'sha256';
+    protected string $hashAlgo = 'sha256';
 
     /**
      * @param CacheItemPoolInterface|null $cache
@@ -38,18 +38,31 @@ trait CacheableTrait
      * Disable cache
      * @return void
      */
-    protected function unsetCache(): void
+    protected function disableCache(): void
     {
+        $this->previousCache = $this->cache;
         $this->setCache(null);
     }
 
     /**
+     * Restore the cache
+     * @return void
+     */
+    protected function restoreCache(): void
+    {
+        if($this->previousCache){
+            $this->setCache($this->previousCache);
+            $this->previousCache = null;
+        }
+    }
+
+    /**
      * Determine if something should be cacheable or not (default to true)
-     * @param string $function
+     * @param string $method
      * @param array $args
      * @return bool
      */
-    protected function shouldCache(string $function, array $args): bool
+    protected function shouldCache(string $method, array $args): bool
     {
         return true;
     }
@@ -78,21 +91,21 @@ trait CacheableTrait
 
         $data = [
             'class' => $previous_call['class'],
-            'function' => $previous_call['function'],
+            'method' => $previous_call['function'],
             'args' => $previous_call['args'],
         ];
 
-        if (!$this->shouldCache($data['function'], $data['args'])) {
+        if (!$this->shouldCache($data['method'], $data['args'])) {
             return $function();
         }
 
-        $key = $this->generateCacheKey($data);
+        $key = $this->generateCacheKey($data['class'], $data['method'], $data['args']);
 
         $item = $this->cache->getItem($key);
 
         if (!$item->isHit()) {
             $item->set($function());
-            $item->expiresAfter($this->getTTL($data['function'], $data['args']));
+            $item->expiresAfter($this->getTTL($data['method'], $data['args']));
             $this->cache->save($item);
         }
 
@@ -101,11 +114,11 @@ trait CacheableTrait
 
     /**
      * Determine the time to cache the data (default 1 hour)
-     * @param string $function
+     * @param string $method
      * @param array $args
      * @return DateInterval
      */
-    protected function getTTL(string $function, array $args): DateInterval
+    protected function getTTL(string $method, array $args): DateInterval
     {
         return DateInterval::createFromDateString('1 hour');
     }
@@ -113,8 +126,8 @@ trait CacheableTrait
     /**
      * Check if we can serialize this data
      * @param $arguments
-     * @throws InvalidArgumentException
      * @return void
+     * @throws InvalidArgumentException
      */
     private function checkArguments($arguments): void
     {
@@ -127,17 +140,19 @@ trait CacheableTrait
 
     /**
      * Generate a cache key based on the input
-     * @param array $data
+     * @param string $class
+     * @param string $method
+     * @param array $args
      * @return string
      */
-    protected function generateCacheKey(array $data): string
+    protected function generateCacheKey(string $class, string $method, array $args): string
     {
-        $this->checkArguments($data['args']);
+        $this->checkArguments($args);
 
-        return hash($this->hash_algo, serialize([
-            $data['class'],
-            $data['function'],
-            $data['args'],
+        return hash($this->hashAlgo, serialize([
+            $class,
+            $method,
+            $args,
             $this->getCacheId()
         ]));
     }

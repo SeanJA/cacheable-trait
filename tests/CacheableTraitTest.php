@@ -79,7 +79,7 @@ class CacheableTraitTest extends TestCase
                 });
             }
 
-            protected function shouldCache(string $function, array $args): bool
+            protected function shouldCache(string $method, array $args): bool
             {
                 return $args[0] === 1;
             }
@@ -108,13 +108,13 @@ class CacheableTraitTest extends TestCase
 
             function getValue($arg1)
             {
-                $this->unsetCache();
+                $this->disableCache();
                 return $this->remember(function () {
                     return microtime(true);
                 });
             }
 
-            protected function shouldCache(string $function, array $args): bool
+            protected function shouldCache(string $method, array $args): bool
             {
                 return $args[0] === 1;
             }
@@ -127,6 +127,42 @@ class CacheableTraitTest extends TestCase
         $this->assertNotEquals($first, $second);
     }
 
+    public function testRestoreCache()
+    {
+        $cache = new ArrayAdapter();
+
+        $class = new class($cache) {
+            use CacheableTrait;
+
+            public function __construct(CacheItemPoolInterface $cache)
+            {
+                $this->setCache($cache);
+            }
+
+            function getValue()
+            {
+                return $this->remember(function () {
+                    return microtime(true);
+                });
+            }
+
+            function getValueNoCache()
+            {
+                $this->disableCache();
+                $result = $this->getValue();
+                $this->restoreCache();
+                return $result;
+            }
+        };
+
+        $first = $class->getValue();
+        sleep(1);
+        $second = $class->getValueNoCache();
+        $third = $class->getValue();
+
+        $this->assertNotEquals($first, $second);
+        $this->assertEquals($first, $third);
+    }
     public function testNoClosuresPlease()
     {
         $cache = new ArrayAdapter();
@@ -148,7 +184,7 @@ class CacheableTraitTest extends TestCase
         };
 
         $this->expectException(\InvalidArgumentException::class);
-        $class->getValue(function(){
+        $class->getValue(function () {
             return 'what';
         });
     }
