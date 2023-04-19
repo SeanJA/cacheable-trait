@@ -1,6 +1,5 @@
-# laravel-cacheable
-Simple trait to easy cache per-method.
-
+# cacheable-trait
+Simple configurable trait to add caching per-method.
 
 ##How to use it:
 
@@ -58,7 +57,7 @@ class Controller
 ```php
     protected function getCacheId($data): string
     {
-        return $_ENV['RELEASE_VERSION'];
+        return $_ENV['RELEASE_VERSION']; // or something else, I dunno
     }
 ```
 
