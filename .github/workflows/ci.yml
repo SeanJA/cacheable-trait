@@ -37,7 +37,7 @@ jobs:
         uses: ./
         with:
           clover_report_path: ./output.xml
-          min_coverage_percent: 50
+          min_coverage_percent: 101
           fail_build_on_under: true
 
       - name: Coverage Test (Fail)

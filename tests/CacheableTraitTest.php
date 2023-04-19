@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\SeanJA\CacheableTrait;
+namespace Tests\SeanJA\Cache;
 
-use SeanJA\CacheableTrait\CacheableTrait;
+use SeanJA\Cache\CacheableTrait;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -79,7 +79,7 @@ class CacheableTraitTest extends TestCase
                 });
             }
 
-            protected function shouldCache(string $class, string $function, array $args): bool
+            protected function shouldCache(string $function, array $args): bool
             {
                 return $args[0] === 1;
             }
@@ -114,7 +114,7 @@ class CacheableTraitTest extends TestCase
                 });
             }
 
-            protected function shouldCache(string $class, string $function, array $args): bool
+            protected function shouldCache(string $function, array $args): bool
             {
                 return $args[0] === 1;
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\SeanJA\CacheableTrait;
+namespace Tests\SeanJA\Cache;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {

@@ -1,16 +1,16 @@
 {
     "name": "seanja/cacheable-trait",
-    "license": "",
+    "license": "MIT",
     "description": "cacheable trait",
     "autoload": {
         "psr-4": {
-            "SeanJA\\CacheableTrait\\": "src/",
-            "Tests\\SeanJA\\CacheableTrait\\": "tests/"
+            "SeanJA\\Cache\\": "src/",
+            "Tests\\SeanJA\\Cache\\": "tests/"
         }
     },
     "require": {
         "php": "^8",
-        "psr/cache": "^1.0|^3.0"
+        "psr/cache": "^3.0"
     },
     "require-dev": {
         "symfony/cache": "*",

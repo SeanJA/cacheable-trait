@@ -1,6 +1,6 @@
 <?php
 
-namespace SeanJA\CacheableTrait;
+namespace SeanJA\Cache;
 
 use Closure;
 use DateInterval;

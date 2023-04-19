@@ -5,7 +5,7 @@ $inputFile = $argv[1];
 $inputPercent = (float)$argv[2];
 $inputFailBuildOnFailure = filter_var($argv[3], FILTER_VALIDATE_BOOLEAN);
 
-$percentage = min(100, max(0, $inputPercent));
+$percentage = $inputPercent;//min(100, max(0, $inputPercent));
 $exitCode = $inputFailBuildOnFailure ? 1 : 0;
 
 echo "::debug::input_file is $inputFile" . PHP_EOL;
