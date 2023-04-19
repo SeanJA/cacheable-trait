@@ -26,23 +26,23 @@ jobs:
           coverage: xdebug
 
       - name: Install dependencies
-        working-directory: sample
+        working-directory: ./
         run: composer install --no-suggest --no-interaction --optimize-autoloader
 
       - name: Run tests
-        working-directory: sample
+        working-directory: ./
         run: vendor/bin/phpunit --coverage-clover=output.xml
 
       - name: Coverage Test
         uses: ./
         with:
-          clover_report_path: sample/output.xml
+          clover_report_path: ./output.xml
           min_coverage_percent: 50
           fail_build_on_under: true
 
       - name: Coverage Test (Fail)
         uses: ./
         with:
-          clover_report_path: sample/output.xml
+          clover_report_path: ./output.xml
           min_coverage_percent: 100
           fail_build_on_under: false
