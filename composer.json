@@ -1,10 +1,11 @@
 {
     "name": "seanja/cacheable-trait",
+    "license": "",
     "description": "cacheable trait",
     "autoload": {
         "psr-4": {
-            "CacheableTrait\\": "src/",
-            "Tests\\CacheableTrait\\": "tests/"
+            "SeanJA\\CacheableTrait\\": "src/",
+            "Tests\\SeanJA\\CacheableTrait\\": "tests/"
         }
     },
     "require": {

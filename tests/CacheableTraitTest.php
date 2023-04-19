@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\CacheableTrait;
+namespace Tests\SeanJA\CacheableTrait;
 
-use CacheableTrait\CacheableTrait;
+use SeanJA\CacheableTrait\CacheableTrait;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 

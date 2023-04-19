@@ -1,6 +1,6 @@
 <?php
 
-namespace CacheableTrait;
+namespace SeanJA\CacheableTrait;
 
 use Closure;
 use DateInterval;
@@ -45,12 +45,11 @@ trait CacheableTrait
 
     /**
      * Determine if something should be cacheable or not (default to true)
-     * @param string $class
      * @param string $function
      * @param array $args
      * @return bool
      */
-    protected function shouldCache(string $class, string $function, array $args): bool
+    protected function shouldCache(string $function, array $args): bool
     {
         return true;
     }
@@ -83,7 +82,7 @@ trait CacheableTrait
             'args' => $previous_call['args'],
         ];
 
-        if (!$this->shouldCache($data['class'], $data['function'], $data['args'])) {
+        if (!$this->shouldCache($data['function'], $data['args'])) {
             return $function();
         }
 
@@ -93,7 +92,7 @@ trait CacheableTrait
 
         if (!$item->isHit()) {
             $item->set($function());
-            $item->expiresAfter($this->getTTL());
+            $item->expiresAfter($this->getTTL($data['function'], $data['args']));
             $this->cache->save($item);
         }
 
@@ -101,11 +100,12 @@ trait CacheableTrait
     }
 
     /**
-     * Amount of time to cache the data
-     *
+     * Determine the time to cache the data (default 1 hour)
+     * @param string $function
+     * @param array $args
      * @return DateInterval
      */
-    protected function getTTL(): DateInterval
+    protected function getTTL(string $function, array $args): DateInterval
     {
         return DateInterval::createFromDateString('1 hour');
     }
@@ -113,6 +113,7 @@ trait CacheableTrait
     /**
      * Check if we can serialize this data
      * @param $arguments
+     * @throws InvalidArgumentException
      * @return void
      */
     private function checkArguments($arguments): void
@@ -126,10 +127,10 @@ trait CacheableTrait
 
     /**
      * Generate a cache key based on the input
-     * @param $data
+     * @param array $data
      * @return string
      */
-    protected function generateCacheKey($data): string
+    protected function generateCacheKey(array $data): string
     {
         $this->checkArguments($data['args']);
 

@@ -3,18 +3,12 @@ Simple configurable trait to add caching per-method.
 
 ##How to use it:
 
-> Note: This trait can be used in any class.
-
-Features:
-* Remember data from cache ( if exists returns or store )
-* Custom cache ttl
-
 ---
-##### Add use and pass in the psr6 cache item pool interface:
+##### Add use and pass in the psr6 cache item pool interface, hopefully using a 
 
 ```php
 
-use CacheableTrait\CacheableTrait;
+use SeanJA\CacheableTrait\CacheableTrait;
 
 class Controller
 {
@@ -25,7 +19,7 @@ class Controller
     }
 }
 ```
-##### Call it where you need:
+##### Using it in a method:
 ```php
     public function cacheableMethod( $cacheable_parameters )
     {
@@ -37,15 +31,21 @@ class Controller
     }
 ```
 
-##### (Optional) Configure TTL per-class
+##### Configure TTL
+Add a protected method called `getTTL` to your class that returns a date interval
 ```php
-    protected function getTTL(): DateInterval
+    protected function getTTL(string $function, array $args): DateInterval
     {
-        return DateInterval::createFromDateString('1 day');
+        return match ($function) {
+            'method1' => DateInterval::createFromDateString('1 day'),
+            'method2' => DateInterval::createFromDateString('10 seconds'),
+            'method3' => DateInterval::createFromDateString('10 seconds'),
+            default => DateInterval::createFromDateString('6 minutes'),
+        };
     }
 ```
 
-##### (Optional) Implement your own key algorithm per-class
+##### Implement your own key algorithm per-class
 ```php
     protected function generateCacheKey($data): string
     {
@@ -53,7 +53,7 @@ class Controller
     }
 ```
 
-##### (Optional) Add an environment variable to the cache key per-class
+##### Add an environment variable to the cache key per-class
 ```php
     protected function getCacheId($data): string
     {
@@ -61,15 +61,15 @@ class Controller
     }
 ```
 
-##### (Optional) Decide if something should be cached per-class
+##### Decide if something should be cached
 ```php
-    protected function shouldCache(string $class, string $function, array $args): bool
+    protected function shouldCache(string $function, array $args): bool
     {
         return $args[0] === 'plz cache';
     }
 ```
 
-##### Disable the cache
+##### Disable the cache (remember will do nothing because the cache is null)
 ```php
     public function shouldDisableCaching(): void
     {
