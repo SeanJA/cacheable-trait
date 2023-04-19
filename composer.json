@@ -1,6 +1,8 @@
 {
     "name": "seanja/cacheable-trait",
     "license": "MIT",
+    "type": "library",
+    "keywords": ["caching", "cache", "PSR-6", "psr6"],
     "description": "cacheable trait",
     "autoload": {
         "psr-4": {
@@ -16,6 +18,9 @@
         "symfony/cache": "*",
         "phpunit/phpunit": "8.*|^10.0",
         "mockery/mockery": "^1.5"
+    },
+    "suggest": {
+        "symfony/cache": "psr-6 cache implementation"
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
