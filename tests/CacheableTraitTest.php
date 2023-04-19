@@ -98,7 +98,7 @@ class CacheableTraitTest extends TestCase
     {
         $cache = new ArrayAdapter();
 
-        $mightCache = new class($cache) {
+        $willNotCache = new class($cache) {
             use CacheableTrait;
 
             public function __construct(CacheItemPoolInterface $cache)
@@ -120,12 +120,10 @@ class CacheableTraitTest extends TestCase
             }
         };
 
-        $first = $mightCache->getValue(1);
+        $first = $willNotCache->getValue(1);
         sleep(1);
-        $second = $mightCache->getValue(1);
-        $third = $mightCache->getValue(2);
+        $second = $willNotCache->getValue(1);
 
-        $this->assertEquals($first, $second);
-        $this->assertNotEquals($first, $third);
+        $this->assertNotEquals($first, $second);
     }
 }
