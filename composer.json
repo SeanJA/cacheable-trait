@@ -3,20 +3,24 @@
     "license": "MIT",
     "type": "library",
     "keywords": ["caching", "cache", "PSR-6", "psr6"],
-    "description": "cacheable trait",
+    "description": "simple generic cacheable trait",
     "autoload": {
         "psr-4": {
-            "SeanJA\\Cache\\": "src/",
+            "SeanJA\\Cache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "Tests\\SeanJA\\Cache\\": "tests/"
         }
     },
     "require": {
-        "php": "^8",
+        "php": "^8.3",
         "psr/cache": "^3.0"
     },
     "require-dev": {
         "symfony/cache": "*",
-        "phpunit/phpunit": "8.*|^10.0",
+        "phpunit/phpunit": "^10.0",
         "mockery/mockery": "^1.5"
     },
     "suggest": {
