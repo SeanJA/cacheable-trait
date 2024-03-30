@@ -1,7 +1,7 @@
 # cacheable-trait
 Simple configurable trait to add caching per-method.
 
-##How to use it:
+## How to use it:
 
 ---
 ##### Add use and pass in the psr6 cache item pool interface
