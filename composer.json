@@ -20,7 +20,7 @@
     },
     "require-dev": {
         "symfony/cache": "*",
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^10.0 || ^12.0",
         "mockery/mockery": "^1.5"
     },
     "suggest": {
